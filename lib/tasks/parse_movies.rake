@@ -1,6 +1,6 @@
 namespace :parse do
 	desc "Parse movies"
-	task :cities => :environment do
+	task cities: :environment do
 		require "nokogiri"
 		require "open-uri"
 		City.destroy_all
@@ -21,21 +21,14 @@ namespace :parse do
 		end
 	end
 
-	task :movies => :environment do
-		require "nokogiri"
-		require "open-uri"
-		
-
-	end
-
-	task :sessions => :environment do
+	task sessions: :environment do
 		init_time = Time.now
 		require "nokogiri"
 		require "open-uri"
 		
 		Session.destroy_all
 		Movie.destroy_all
-		used = {}
+		used = Hash.new
 		i = 0
 		Cinema.all.each do |cinema|
 			i += 1
@@ -54,9 +47,9 @@ namespace :parse do
 					end
 					title = movie_page.css('.title span').text
 					description = movie_page.css('.story p').text
-					Movie.create(id: id, title: title, image_url: image_url)
+					Movie.create(id: id, title: title, image_url: image_url, description: description)
 				end
-				movie.css(".txt-rounded").each do |session|
+				movie.css("tr.seance_active td.time").each do |session|
 					Session.create(movie_id: id, cinema_id: cinema.id, time: session.text)
 				end
 			end

@@ -3,8 +3,6 @@ class CreateCinemas < ActiveRecord::Migration[5.2]
     create_table :cinemas do |t|
       t.string :name
       t.integer :city_id
-
-      t.timestamps
     end
   end
 end
